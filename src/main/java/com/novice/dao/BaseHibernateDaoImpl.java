@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by novice on 15/9/24.
  */
-public class BaseHibernateDaoImpl implements  BaseHibernateDao {
+public class BaseHibernateDaoImpl implements BaseHibernateDao {
 
     private SessionFactory sessionFactory;
 
@@ -31,6 +31,6 @@ public class BaseHibernateDaoImpl implements  BaseHibernateDao {
 
     public <T> T findSingle(String hqlStr) {
         Query query = getSession().createQuery(hqlStr);
-        return (T)query.uniqueResult();
+        return (T) query.uniqueResult();
     }
 }
