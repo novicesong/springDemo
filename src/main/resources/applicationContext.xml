@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+    <!-- 导入spring-config 数据库配置文件 -->
+    <context:property-placeholder location="classpath:spring-config.properties"/>
+
+    <!-- 注解扫描 用这种方法比用 context:annotation-config 更加的灵活 -->
+    <context:component-scan base-package="com.novice.*"/>
+
+    <!-- 指定数据源Bean -->
+    <bean id="springDemoDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="java:comp/env/jdbc/springDemo"/>
+    </bean>
+
+    <!-- 指定Hibernate的SessionFactory Bean -->
+    <bean id="springDemoSessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.query.substitutions">true='1',false='0'</prop>
+                <prop key="hibernate.jdbc.fetch_size">${hibernate.jdbc.fetch_size}</prop>
+                <prop key="hibernate.jdbc.batch_size">${hibernate.jdbc.batch_size}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.current_session_context_class">
+                    org.springframework.orm.hibernate4.SpringSessionContext
+                </prop>
+                <prop key="jdbc.use_scrollable_resultset">${jdbc.use_scrollable_result_set}</prop>
+            </props>
+        </property>
+        <property name="dataSource" ref="springDemoDataSource"/>
+        <property name="packagesToScan">
+            <list>
+                <value>com.novice.*</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 事务管理器  -->
+    <bean id="springDemoTxManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="springDemoSessionFactory"/>
+    </bean>
+
+    <!-- 对标注@Transactional 注解的Bean 进行加工处理，以织入事务管理切面 -->
+    <tx:annotation-driven transaction-manager="springDemoTxManager"/>
+
+</beans>
