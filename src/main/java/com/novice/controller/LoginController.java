@@ -24,7 +24,7 @@ public class LoginController {
     @Autowired
     private UserManagerService userManagerService;
 
-    @RequestMapping(value = "/doLogin", method = RequestMethod.POST)
+    @RequestMapping(value = "/doLogin", method = RequestMethod.GET)
     public String doLogin(HttpServletRequest request, ModelMap model) {
 
         String userName = request.getParameter("userName");
