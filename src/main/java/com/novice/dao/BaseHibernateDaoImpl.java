@@ -3,6 +3,7 @@ package com.novice.dao;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  */
 public class BaseHibernateDaoImpl implements BaseHibernateDao {
 
+    @Autowired
     private SessionFactory sessionFactory;
 
     public Session getSession() {
